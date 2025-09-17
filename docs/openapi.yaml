@@ -1,0 +1,250 @@
+openapi: 3.1.0
+info:
+  title: Claude - Docling API Wrapper
+  description: A lightweight API service that wraps IBM's Docling library to provide document conversion capabilities for knowledge management systems.
+  version: 0.1.0
+  contact:
+    name: Claude API Team
+    url: https://github.com/claude/docling-wrapper
+    email: api@claude-docling.example.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  x-logo:
+    url: https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+  - url: https://api.claude-docling.example.com
+    description: Production server
+
+tags:
+  - name: Conversion
+    description: Operations related to document conversion
+  - name: Health
+    description: Health check endpoints
+  - name: Documentation
+    description: API documentation endpoints
+
+paths:
+  /api/v1/convert:
+    post:
+      summary: Convert document to Markdown
+      description: |
+        Convert a document to Markdown format.
+        
+        Currently supports:
+        - HTML from URL
+        - HTML source content
+        
+        PDF support will be added in a future update.
+      operationId: convertDocument
+      tags:
+        - Conversion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConversionRequest'
+            example:
+              type: html_url
+              source: https://example.com
+              options:
+                include_metadata: true
+                preserve_images: false
+                headers:
+                  Authorization: Bearer token
+      responses:
+        '200':
+          description: Successful conversion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversionResponse'
+              example:
+                success: true
+                markdown: "# Document Title\n\nDocument content..."
+                metadata:
+                  title: Example Document
+                  source_type: html_url
+                  processing_time_ms: 1500
+                  file_size_bytes: 12345
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: Validation error
+                details:
+                  message: Invalid URL format
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: Internal server error
+                details:
+                  message: An unexpected error occurred
+
+  /health:
+    get:
+      summary: Health check
+      description: Health check endpoint to verify the API is running
+      operationId: healthCheck
+      tags:
+        - Health
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: healthy
+                  version:
+                    type: string
+                    example: 0.1.0
+                required:
+                  - status
+                  - version
+
+  /openapi:
+    get:
+      summary: Get OpenAPI specification
+      description: |
+        Get the OpenAPI specification for the API.
+        
+        Returns the complete OpenAPI specification in JSON format.
+        This can be used to generate API documentation or client libraries.
+      operationId: getOpenApiSpec
+      tags:
+        - Documentation
+      responses:
+        '200':
+          description: OpenAPI specification
+          content:
+            application/json:
+              schema:
+                type: object
+
+components:
+  schemas:
+    SourceType:
+      type: string
+      enum:
+        - pdf
+        - html_url
+        - html_source
+      description: Type of source to convert
+
+    ConversionOptions:
+      type: object
+      properties:
+        include_metadata:
+          type: boolean
+          default: true
+          description: Whether to include metadata in the response
+        preserve_images:
+          type: boolean
+          default: false
+          description: Whether to preserve images in the markdown output
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+          description: Headers to use when fetching the URL
+      description: Options for the conversion process
+
+    ConversionRequest:
+      type: object
+      required:
+        - type
+        - source
+      properties:
+        type:
+          $ref: '#/components/schemas/SourceType'
+        source:
+          type: string
+          description: URL or HTML source content to convert
+        options:
+          $ref: '#/components/schemas/ConversionOptions'
+      description: Request model for the conversion endpoint
+
+    ConversionMetadata:
+      type: object
+      required:
+        - source_type
+        - processing_time_ms
+      properties:
+        title:
+          type: string
+          nullable: true
+          description: Document title
+        source_type:
+          $ref: '#/components/schemas/SourceType'
+        processing_time_ms:
+          type: integer
+          description: Time taken to process the document in ms
+        file_size_bytes:
+          type: integer
+          nullable: true
+          description: Size of the source file in bytes
+      description: Metadata about the conversion process
+
+    ConversionResponse:
+      type: object
+      required:
+        - success
+        - markdown
+      properties:
+        success:
+          type: boolean
+          description: Whether the conversion was successful
+        markdown:
+          type: string
+          description: The converted markdown content
+        metadata:
+          $ref: '#/components/schemas/ConversionMetadata'
+      description: Response model for the conversion endpoint
+
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+      properties:
+        success:
+          type: boolean
+          default: false
+          description: Always false for error responses
+        error:
+          type: string
+          description: Error message
+        details:
+          type: object
+          additionalProperties:
+            oneOf:
+              - type: string
+              - type: array
+                items:
+                  type: string
+          nullable: true
+          description: Additional error details
+      description: Error response model

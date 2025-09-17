@@ -71,11 +71,54 @@ def custom_openapi():
         description=app.description,
         routes=app.routes,
     )
+    
+    # Add additional info to the OpenAPI schema
+    openapi_schema["info"]["x-logo"] = {
+        "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"
+    }
+    
+    # Add contact information
+    openapi_schema["info"]["contact"] = {
+        "name": "Claude API Team",
+        "url": "https://github.com/claude/docling-wrapper",
+        "email": "api@claude-docling.example.com",
+    }
+    
+    # Add license information
+    openapi_schema["info"]["license"] = {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT",
+    }
+    
+    # Add tags metadata
+    openapi_schema["tags"] = [
+        {
+            "name": "Conversion",
+            "description": "Operations related to document conversion",
+        },
+        {
+            "name": "Health",
+            "description": "Health check endpoints",
+        },
+    ]
+    
     app.openapi_schema = openapi_schema
     return app.openapi_schema
 
 
 app.openapi = custom_openapi
+
+
+# OpenAPI endpoint to retrieve the OpenAPI specification
+@app.get("/openapi", tags=["Documentation"])
+async def get_openapi_spec():
+    """
+    Get the OpenAPI specification for the API.
+    
+    Returns the complete OpenAPI specification in JSON format.
+    This can be used to generate API documentation or client libraries.
+    """
+    return app.openapi()
 
 
 # Health check endpoint

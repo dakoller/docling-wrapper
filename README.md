@@ -92,26 +92,34 @@ uv pip install uvicorn fastapi httpx pydantic
 
 3. You can access the API documentation at http://localhost:8000/docs
 
+#### Docker Image Features
+
+The Docker image includes several optimizations and security features:
+
+- **Multi-stage build**: Reduces the final image size by separating build and runtime dependencies
+- **Security hardening**:
+  - Runs as a non-root user (`appuser`)
+  - Uses minimal base image (python:3.12-slim)
+  - Includes only necessary runtime dependencies
+  - Proper file permissions and ownership
+  - Uses tini as init process to handle signals properly
+- **Health check**: Monitors the application's health via the `/health` endpoint
+- **Build optimizations**:
+  - Layer caching for faster builds
+  - Minimized number of layers
+  - Proper cleanup of package manager caches
+
 #### Troubleshooting Docker Build
 
-If you encounter issues with the Docker build process, such as:
+If you encounter issues with the Docker build process, you can try the following:
 
-```
-error: No virtual environment found; run `uv venv` to create an environment, or pass `--system` to install into a non-virtual environment
-```
-
-The Dockerfile has been updated to use pip directly instead of uv for dependency installation. If you still encounter issues, you can modify the Dockerfile to use a different installation method:
-
-```dockerfile
-# Option 1: Use pip directly (current approach)
-RUN pip install -e .
-RUN pip install uvicorn fastapi httpx pydantic
-
-# Option 2: Use uv with --system flag
-# RUN pip install uv
-# RUN uv pip install --system -e .
-# RUN uv pip install --system uvicorn fastapi httpx pydantic
-```
+1. Make sure Docker has enough resources allocated (memory, CPU)
+2. Check if all required files are present and not excluded by .dockerignore
+3. Try building with the `--no-cache` flag to start fresh:
+   ```bash
+   docker compose build --no-cache
+   ```
+4. If you're behind a proxy, ensure Docker is properly configured to use it
 
 ### Testing
 
@@ -130,7 +138,34 @@ python test/test_conversion.py --url https://example.com --api http://localhost:
 
 ## Documentation
 
-For detailed documentation, see the [architecture_docs](./architecture_docs/) directory:
+### API Documentation
+
+The API documentation is available in multiple formats:
+
+1. **Swagger UI**: When the application is running, you can access the interactive API documentation at http://localhost:8000/docs
+
+2. **OpenAPI Specification**: The API provides an endpoint to retrieve the OpenAPI specification at http://localhost:8000/openapi
+
+3. **Static OpenAPI File**: A static OpenAPI specification file is available in the [docs/openapi.yaml](./docs/openapi.yaml) file. This can be used with tools like Swagger UI, Redoc, or OpenAPI Generator.
+
+4. **OpenAPI Documentation Server**: You can serve the OpenAPI documentation without running the full application using the provided script:
+
+   ```bash
+   # Run the OpenAPI documentation server
+   ./docs/serve_openapi.py
+   
+   # Specify a custom port
+   ./docs/serve_openapi.py --port 9000
+   
+   # Run without opening a browser
+   ./docs/serve_openapi.py --no-browser
+   ```
+   
+   This will start a simple HTTP server and open the OpenAPI documentation in Swagger UI and Redoc in your browser.
+
+### Project Documentation
+
+For detailed project documentation, see the [architecture_docs](./architecture_docs/) directory:
 
 - [Project Roadmap](./architecture_docs/projectRoadmap.md)
 - [Current Task](./architecture_docs/currentTask.md)

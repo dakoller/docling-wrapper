@@ -54,8 +54,11 @@ async def convert_document(request: Request, conversion_request: ConversionReque
 
         # Process based on source type
         if conversion_request.type == SourceType.HTML_URL:
+            # Get verify_ssl option
+            verify_ssl = options.verify_ssl if options and hasattr(options, "verify_ssl") else False
+            
             markdown_content, metadata = await convert_html_url_to_markdown(
-                conversion_request.source, headers
+                conversion_request.source, headers, verify_ssl=verify_ssl
             )
         elif conversion_request.type == SourceType.HTML_SOURCE:
             markdown_content, metadata = await convert_html_source_to_markdown(

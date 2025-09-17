@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 async def convert_html_url_to_markdown(
-    url: str, headers: Optional[Dict[str, str]] = None
+    url: str, headers: Optional[Dict[str, str]] = None, verify_ssl: bool = False
 ) -> Tuple[str, ConversionMetadata]:
     """
     Convert HTML from a URL to Markdown.
@@ -29,6 +29,7 @@ async def convert_html_url_to_markdown(
     Args:
         url: The URL to fetch HTML from
         headers: Optional headers to include in the request
+        verify_ssl: Whether to verify SSL certificates (default: False)
 
     Returns:
         Tuple containing:
@@ -40,13 +41,13 @@ async def convert_html_url_to_markdown(
         httpx.HTTPError: If the request fails
     """
     # Validate URL
-    if not await is_valid_url(url):
+    if not await is_valid_url(url, verify_ssl=verify_ssl):
         raise ValueError(f"Invalid or inaccessible URL: {url}")
 
     start_time = time.time()
     
     # Fetch HTML content
-    html_content, response_headers, content_size = await fetch_url_content(url, headers)
+    html_content, response_headers, content_size = await fetch_url_content(url, headers, verify_ssl=verify_ssl)
     
     # Extract title from HTML if available
     title = extract_title_from_html(html_content)

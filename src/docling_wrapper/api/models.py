@@ -31,6 +31,9 @@ class ConversionOptions(BaseModel):
     headers: Optional[Dict[str, str]] = Field(
         default=None, description="Headers to use when fetching the URL"
     )
+    verify_ssl: bool = Field(
+        default=False, description="Whether to verify SSL certificates when fetching URLs"
+    )
 
 
 class ConversionRequest(BaseModel):
@@ -53,6 +56,7 @@ class ConversionRequest(BaseModel):
                     "include_metadata": True,
                     "preserve_images": False,
                     "headers": {"Authorization": "Bearer token"},
+                    "verify_ssl": False,
                 },
             }
         }

@@ -16,13 +16,14 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy requirements files
+# Copy project files
 COPY pyproject.toml README.md ./
+COPY src ./src
 
 # Install dependencies
 RUN pip install --upgrade pip && \
     pip install wheel setuptools && \
-    pip install -e . && \
+    pip install . && \
     pip install uvicorn fastapi httpx pydantic
 
 # Final stage

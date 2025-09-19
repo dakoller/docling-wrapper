@@ -14,7 +14,20 @@ from fastapi.openapi.utils import get_openapi
 # Check if docling is installed, if not, use our mock implementation
 try:
     import docling
-    print("Using actual Docling library")
+    
+    # Check if docling has the necessary functionality
+    required_functions = ['convert_html_to_markdown']
+    missing_functions = [func for func in required_functions if not hasattr(docling, func)]
+    
+    if missing_functions:
+        print(f"Docling library found but missing required functions: {', '.join(missing_functions)}")
+        print("Using mock implementation for missing functionality")
+        # Import our mock module and add the missing functions to the docling module
+        mock_docling = __import__('docling_wrapper.utils.mock_docling')
+        for func in missing_functions:
+            setattr(docling, func, getattr(mock_docling.docling_wrapper.utils.mock_docling, func))
+    else:
+        print("Using actual Docling library with all required functionality")
 except ImportError:
     print("Docling library not found, using mock implementation")
     sys.modules['docling'] = __import__('docling_wrapper.utils.mock_docling')

@@ -8,8 +8,17 @@ from typing import Dict, Optional, Tuple
 
 # Try to import from docling, if not available, use our mock implementation
 try:
-    from docling import convert_html_to_markdown
-    print("Using actual Docling library for HTML conversion")
+    # First check if docling module is available
+    import docling
+    
+    # Then check if it has the convert_html_to_markdown function
+    if hasattr(docling, 'convert_html_to_markdown'):
+        from docling import convert_html_to_markdown
+        print("Using actual Docling library for HTML conversion")
+    else:
+        # Docling exists but doesn't have the function we need
+        print("Docling library found but missing convert_html_to_markdown function, using mock implementation")
+        from docling_wrapper.utils.mock_docling import convert_html_to_markdown
 except ImportError:
     print("Docling library not found, using mock implementation for HTML conversion")
     from docling_wrapper.utils.mock_docling import convert_html_to_markdown

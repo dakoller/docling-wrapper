@@ -49,12 +49,14 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy dependencies from builder stage
-COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
-COPY --from=builder /usr/local/bin /usr/local/bin
-
-# Copy application code
+# Copy project files
+COPY pyproject.toml README.md ./
 COPY --chown=appuser:appuser src ./src
+
+# Install dependencies directly in the final stage
+RUN pip install --upgrade pip && \
+    pip install . && \
+    pip install uvicorn fastapi httpx pydantic
 
 # Create temp directory with proper permissions
 RUN mkdir -p /tmp/claude-temp && \

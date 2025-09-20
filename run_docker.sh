@@ -1,9 +1,9 @@
 #!/bin/bash
 # Script to run the application in Docker
 
-# Build the Docker image
-echo "Building Docker image..."
-docker compose build
+# Pull the latest image from Docker Hub
+echo "Pulling latest image from Docker Hub..."
+docker pull dakoller/docling-wrapper:latest
 
 # Start the containers
 echo "Starting containers..."

@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8000"
+      - "8899:8000"
     environment:
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://signoz-otel.tools.palino.me:443
       - OTEL_SERVICE_NAME=claude-docling-api

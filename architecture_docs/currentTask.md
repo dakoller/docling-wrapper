@@ -1,9 +1,9 @@
-# Current Task: Project Setup and Core API Implementation
+# Current Task: OTEL Functionality Disabled
 
 ## Current Objectives
-- ✅ Set up the basic project structure for the Claude - Docling API Wrapper
-- ✅ Configure the development environment with necessary dependencies
-- ✅ Implement the core API functionality (Phase 1 from projectRoadmap.md)
+- ✅ Remove OpenTelemetry (OTEL) integration from the project
+- ✅ Simplify the architecture by removing observability dependencies
+- ✅ Update documentation to reflect the changes
 
 ## Context
 The project has completed its initial setup phase. We have implemented the basic functionality for converting HTML to Markdown, both from URLs and raw HTML content. The PDF conversion functionality is planned for future implementation.
@@ -45,6 +45,16 @@ We have:
 - ✅ Implemented HTML source processing functionality
 - ✅ Created test files for verification
 
+## Completed in This Task
+
+### OTEL Removal
+- ✅ Removed OpenTelemetry dependencies from pyproject.toml
+- ✅ Removed OTEL collector service from docker-compose.yml
+- ✅ Deleted otel-collector-config.yaml file
+- ✅ Updated architecture.md to remove OTEL references
+- ✅ Updated projectRoadmap.md to mark OTEL tasks as disabled
+- ✅ Updated currentTask.md to document changes
+
 ## Next Steps
 
 ### 1. Implement PDF Processing
@@ -57,10 +67,10 @@ We have:
 - Add validation for input parameters
 - Improve error messages and logging
 
-### 3. Improve Observability
-- Enhance OpenTelemetry integration
-- Add more metrics and traces
-- Implement structured logging
+### 3. Improve Observability (Without OTEL)
+- Implement structured logging with better format
+- Add application-level metrics tracking
+- Enhance health check functionality
 
 ### 4. Add Authentication and Security
 - Implement API key authentication
@@ -68,5 +78,6 @@ We have:
 - Implement input validation for security
 
 ## References
-- This task corresponds to Phase 1: Core API (MVP) in the projectRoadmap.md
-- The next phase will focus on observability and production readiness
+- OTEL functionality has been disabled as per request
+- The project now uses a simplified architecture without external observability dependencies
+- Focus is on core document conversion functionality

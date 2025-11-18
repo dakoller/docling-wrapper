@@ -38,7 +38,7 @@
 - [x] Create health check endpoints
 
 ### Observability
-- [x] Integrate OpenTelemetry (OTEL) for traces and metrics
+- ~~Integrate OpenTelemetry (OTEL) for traces and metrics~~ (Disabled)
 - [x] Implement structured logging with correlation IDs
 - [x] Track performance metrics (processing time, success/failure rates)
 - [ ] Monitor resource utilization
@@ -58,8 +58,8 @@
 - [x] Implement basic error handling
 
 ### Phase 2: Observability
-- [ ] Integrate OpenTelemetry
-- [ ] Implement metrics collection and export
+- ~~Integrate OpenTelemetry~~ (Disabled)
+- ~~Implement metrics collection and export~~ (Disabled)
 - [ ] Implement structured logging
 - [ ] Enhance health check functionality
 
@@ -74,7 +74,7 @@
 - Successfully convert PDF and HTML documents to Markdown with 95%+ accuracy
 - Process typical documents within SLA timeouts
 - Achieve 99%+ uptime with proper error handling
-- Provide complete visibility into system performance and errors via OTEL backend
+- Provide complete visibility into system performance and errors via logging
 - Enable one-command deployment via Docker Compose
 
 ## Completed Tasks
@@ -86,6 +86,7 @@
 - [x] Create mock implementation of Docling library
 - [x] Implement API endpoints for conversion
 - [x] Set up Docker containerization
-- [x] Configure OpenTelemetry for observability
+- ~~Configure OpenTelemetry for observability~~ (Disabled - removed OTEL integration)
 - [x] Create test files and scripts
 - [x] Create documentation for running and testing
+- [x] Remove OTEL functionality from project

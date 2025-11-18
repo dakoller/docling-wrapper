@@ -12,8 +12,6 @@
 ### Infrastructure
 - **Docker**: Containerization for consistent deployment
 - **Docker Compose**: Multi-container orchestration for local development and production
-- **OpenTelemetry (OTEL)**: Observability framework for traces and metrics
-- **Prometheus**: Metrics collection (via OTEL)
 
 ## Architecture Decisions
 
@@ -37,9 +35,7 @@
 - Graceful degradation when possible
 
 ### Observability
-- OpenTelemetry integration for distributed tracing
-- Structured logging with correlation IDs
-- Prometheus metrics for monitoring
+- Structured logging for debugging and monitoring
 - Health check endpoint for system status
 
 ## Technical Debt
@@ -61,12 +57,9 @@
 
 ### Development Environment
 - Local Docker Compose setup with hot reloading
-- Local OpenTelemetry collector for development
 
 ### Production Environment
 - Docker container deployment
-- External OpenTelemetry collector
-- Prometheus for metrics collection
 - Proper resource limits and scaling
 
 ## Data Flow
@@ -75,7 +68,6 @@
 2. API validates request and fetches document if needed
 3. Document is processed by Docling library
 4. Markdown output is generated and returned to client
-5. Metrics and traces are collected throughout the process
 
 ## Security Considerations
 

@@ -9,6 +9,27 @@ import httpx
 logger = logging.getLogger(__name__)
 
 
+def normalize_url(url: str) -> str:
+    """
+    Normalize a URL by adding https:// protocol if missing.
+
+    Args:
+        url: The URL to normalize
+
+    Returns:
+        The normalized URL with protocol
+    """
+    url = url.strip()
+    
+    # Check if URL already has a protocol
+    if url.startswith("http://") or url.startswith("https://"):
+        return url
+    
+    # Add https:// as default protocol
+    logger.info(f"URL missing protocol, prepending https:// to: {url}")
+    return f"https://{url}"
+
+
 async def fetch_url_content(
     url: str, headers: Optional[Dict[str, str]] = None, timeout: int = 30, verify_ssl: bool = False
 ) -> Tuple[Union[str, bytes], Dict[str, str], int]:
@@ -30,6 +51,9 @@ async def fetch_url_content(
     Raises:
         httpx.HTTPError: If the request fails
     """
+    # Normalize URL to ensure it has a protocol
+    url = normalize_url(url)
+    
     logger.info(f"Fetching content from URL: {url}")
     
     async with httpx.AsyncClient(timeout=timeout, verify=verify_ssl) as client:
@@ -62,6 +86,9 @@ async def is_valid_url(url: str, verify_ssl: bool = False) -> bool:
     Returns:
         True if the URL is valid and accessible, False otherwise
     """
+    # Normalize URL to ensure it has a protocol
+    url = normalize_url(url)
+    
     try:
         async with httpx.AsyncClient(timeout=5, verify=verify_ssl) as client:
             response = await client.head(url, follow_redirects=True)

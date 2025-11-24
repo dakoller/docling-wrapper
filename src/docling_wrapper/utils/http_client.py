@@ -57,7 +57,7 @@ async def fetch_url_content(
     logger.info(f"Fetching content from URL: {url}")
     
     async with httpx.AsyncClient(timeout=timeout, verify=verify_ssl) as client:
-        response = await client.get(url, headers=headers, follow_redirects=True)
+        response = await client.get(url, headers=headers, follow_redirects=False)
         response.raise_for_status()
         
         content_type = response.headers.get("content-type", "")
@@ -91,7 +91,7 @@ async def is_valid_url(url: str, verify_ssl: bool = False) -> bool:
     
     try:
         async with httpx.AsyncClient(timeout=5, verify=verify_ssl) as client:
-            response = await client.head(url, follow_redirects=True)
+            response = await client.head(url, follow_redirects=False)
             return response.status_code < 400
     except Exception as e:
         logger.warning(f"URL validation failed for {url}: {str(e)}")

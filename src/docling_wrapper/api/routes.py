@@ -84,14 +84,27 @@ async def convert_document(request: Request, conversion_request: ConversionReque
 
     except ValueError as e:
         logger.warning(f"Validation error: {str(e)}")
-        return JSONResponse(
-            status_code=400,
-            content=ErrorResponse(
+        # Check if this is an invalid URL error
+        error_message = str(e)
+        if "Invalid or inaccessible URL" in error_message:
+            # Return HTTP 200 with error field for URL validation errors
+            response = ConversionResponse(
                 success=False,
-                error="Validation error",
-                details={"message": str(e)},
-            ).dict(),
-        )
+                markdown=None,
+                metadata=None,
+                error="Invalid or inaccessible URL"
+            )
+            return response
+        else:
+            # Other validation errors still return 400
+            return JSONResponse(
+                status_code=400,
+                content=ErrorResponse(
+                    success=False,
+                    error="Validation error",
+                    details={"message": str(e)},
+                ).dict(),
+            )
     except NotImplementedError as e:
         logger.warning(f"Not implemented: {str(e)}")
         return JSONResponse(

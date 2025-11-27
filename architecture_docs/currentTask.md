@@ -1,9 +1,9 @@
-# Current Task: OTEL Functionality Disabled
+# Current Task: Improve Error Handling for URL Validation
 
 ## Current Objectives
-- ✅ Remove OpenTelemetry (OTEL) integration from the project
-- ✅ Simplify the architecture by removing observability dependencies
-- ✅ Update documentation to reflect the changes
+- ✅ Modify error response for "Invalid or inaccessible URL" errors
+- ✅ Return HTTP 200 with error field in JSON response instead of HTTP 400
+- ✅ Update ConversionResponse model to support error field
 
 ## Context
 The project has completed its initial setup phase. We have implemented the basic functionality for converting HTML to Markdown, both from URLs and raw HTML content. The PDF conversion functionality is planned for future implementation.

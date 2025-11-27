@@ -81,10 +81,11 @@ class ConversionResponse(BaseModel):
     """
 
     success: bool = Field(description="Whether the conversion was successful")
-    markdown: str = Field(description="The converted markdown content")
+    markdown: Optional[str] = Field(default=None, description="The converted markdown content")
     metadata: Optional[ConversionMetadata] = Field(
         default=None, description="Metadata about the conversion"
     )
+    error: Optional[str] = Field(default=None, description="Error message if conversion failed")
 
     class Config:
         json_schema_extra = {
